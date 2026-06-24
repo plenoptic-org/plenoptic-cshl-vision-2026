@@ -68,11 +68,5 @@ html_theme_options = {
             "type": "fontawesome",
             "icon": "fa-solid fa-house",
         },
-        {
-            "name": "Binder",
-            "url": "https://binder.flatironinstitute.org/v2/user/wbroderick/vss2025?labpath=notebooks/introduction-users.ipynb",
-            "type": "url",
-            "icon": "https://mybinder.org/badge_logo.svg",
-        },
     ],
 }

@@ -7,12 +7,12 @@ from glob import glob
 
 USER_NB_EXPLAIN="""
 This notebook has had all its explanatory text removed and has not been run.
- It is intended to be downloaded and run locally (or on the provided binder)
+ It is intended to be downloaded and run locally
  while listening to the presenter's explanation. In order to see the fully
  rendered of this notebook, go [here]({})"""
 PRESENTER_NB_EXPLAIN="""
 This notebook has had all its explanatory text removed and has not been run.
- It is intended to be downloaded and run locally (or on the provided binder)
+ It is intended to be downloaded and run locally
  while listening to the presenter's explanation. In order to see the fully
  rendered of this notebook, go [here]({})"""
 

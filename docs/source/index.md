@@ -299,18 +299,6 @@ If you have `ffmpeg` installed and are still having issues, try running `conda u
   - Restart the powershell and check that conda is in the path. Run for example `conda --version`.
 - If you see `sys:1: DeprecationWarning: Call to deprecated function (or staticmethod) _destroy.` when running `python scripts/setup.py`, we don't think this is actually a problem. As long as `check_setup.py` says everything looks good, you're fine!
 
-## Binder
-
-A binder instance (a virtual environment running on Flatiron's cluster) is provided in case we cannot get your installation working. To access it, click the "launch binder" button in the top left of this site or click [here](https://binder.flatironinstitute.org/v2/user/wbroderick/vss2025?labpath=notebooks).
-
-You must login with the email address you provided when registering for the workshop. If you get a `403 Forbidden` error or would like to use a different email, send let Billy know.
-
-- You are only allowed to have a single binder instance running at a time, so if you get the "already have an instance running error", go to the [binderhub page](https://binder.flatironinstitute.org/hub/hub/home) (or click on "check your currently running servers" on the right of the page) to join your running instance.
-- If you lose connection halfway through the workshop, go to the [binderhub page](https://binder.flatironinstitute.org/hub/hub/home) to join your running instance rather than restarting the image.
-- This is important because if you restart the image, **you will lose all data and progress**.
-- The binder will be shutdown automatically after 1 day of inactivity or 7 days of total usage. Data will not persist after the binder instance shuts down, so **please download any notebooks** you want to keep.
-- I will destroy this instance in 1 week, so that you can use it to play around during the conference. You can download your notebooks to keep them after the fact.
-
 ## Contents
 
 See description above for an explanation of the difference between these two

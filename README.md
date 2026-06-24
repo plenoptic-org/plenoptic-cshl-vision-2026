@@ -37,8 +37,3 @@ Users version preserves:
 - Only code blocks with `:tag: [render-all]` *OR* wrapped in a `<div class='render-user'>`. For code blocks in render-user divs, you should probably also add the `skip-execution` tag
 - Only colon-fence blocks (e.g., admonitions) that have the class `render-user` or `render-all`
 - Only markdown wrapped in a `<div class='render-user>` or `<div class='render-all'>`.
-
-    
-## binder
-
-See [nemos Feb 2024 workshop](https://github.com/flatironinstitute/nemos-workshop-feb-2024) for details on how to set up the Binder
