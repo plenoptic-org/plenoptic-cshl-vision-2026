@@ -1,8 +1,8 @@
-# plenoptic-vss-2025
+# plenoptic-cshl-vision-2026
 
-Material for [satellite at VSS, 2025](https://www.visionsciences.org/2025-plenoptic-satellite/). See the website for more details.
+Notebooks to accompany plenoptic presentation CSHL Computational Vision course, summer 2026.
 
-> [!INFO]
+> [!WARNING]
 > The rest of this README is for contributors to the workshop.
 
 ## Building the site locally
