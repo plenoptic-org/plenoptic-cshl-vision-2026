@@ -1,14 +1,14 @@
-# Welcome to plenoptic satellite event, VSS 2025
+# Welcome to plenoptic tutorial, CSHL Computational Vision Course 2026
 
-This site hosts the example notebook used for the plenoptic satellite event at VSS 2025. This three hour session aims to introduce the basics of using plenoptic in order to better understand computational visual models with simple examples. We hope to explain not just `plenoptic`'s syntax but also the type of reasoning that it facilitates.
+This site hosts an introductory notebook and several exercises that serve as follow-ups for the plenoptic presentation at the CSHL Computational Vision Course, 2026. Their goal is to introduce the basics of using plenoptic in order to better understand computational visual models with simple examples. We hope to explain not just `plenoptic`'s syntax but also the type of reasoning that it facilitates.
 
-The presentation I gave at the beginning of this session can be found [here](https://presentations.plenoptic.org/2025-05-16_vss-symposium/slides.html).
+The introductory presentation can be found [here](https://presentations.plenoptic.org/2026-07-10_cshl-vision/slides.html).
 
-Before the satellite event, please try to follow the [setup](#setup) instructions below to install everything on your personal laptop.
+You are encouraged to follow the [setup](#setup) instructions found on this page, in order to install everything on your laptop. You can then follow along with the [tutorial notebook](full-intro) and work through the exercises (linked in the sidebar).
 
 ## This website
 
-This website contains rendered versions of the notebooks we will be working through during this workshop. During the workshop, attendees should look at the versions found under the `For users` section. These notebooks have some code pre-filled, as well as brief notes to help orient you. If you follow the setup instructions below, you will have editable copies of these notebooks on your laptop, and you are expected to follow along using these notebooks.
+This website contains rendered versions of the notebooks. During the workshop, attendees should look at the versions found under the `For users` section. These notebooks have some code pre-filled, as well as brief notes to help orient you. If you follow the setup instructions below, you will have editable copies of these notebooks on your laptop, and you are expected to follow along using these notebooks.
 
 If you miss something or fall behind, you can look into the `For presenters` section, which includes the completed code blocks (along with some notes), so you can catch up.
 
@@ -19,18 +19,16 @@ You may also find the [glossary](glossary.md) useful as you go through the noteb
 ## Setup
 
 :::{note}
-If you would just like to install `plenoptic` to use it locally, follow [our installation instructions](https://plenoptic.readthedocs.io/en/latest/install.html). This tutorial contains some extra packages for this specific build.
+If you would just like to install `plenoptic` to use it locally, follow [our installation instructions](https://docs.plenoptic.org/docs/tags/2.0.1/getting_started/index.html). This tutorial contains some extra packages for this specific build.
 :::
-
-Before the event, please try to complete the following steps. If you are unable to do so, try to arrive to the event 30 minutes early so we can get it straightened out!
 
 0. Make sure you have `git` installed. It is installed by default on most Mac and Linux machines, but you may need to install it if you are on Windows. [These instructions](https://github.com/git-guides/install-git) should help.
 1. Clone the github repo for this workshop:
    ```shell
-   git clone https://github.com/plenoptic-org/plenoptic-vss-2025.git
+   git clone https://github.com/plenoptic-org/plenoptic-cshl-vision-2026.git
    ```
 
-### Create a virtual environment with python 3.11
+### Create a virtual environment with python 3.12
 
 There are many ways to set up a python virtual environment. You can use your favorite way of doing so. If you don't have a preference or don't know what to do, choose one of the following:
 
@@ -52,15 +50,15 @@ There are many ways to set up a python virtual environment. You can use your fav
    ```
    
 2. Restart your terminal to make sure `uv` is available.
-3. Install python 3.11:
+3. Install python 3.12:
    ```shell
-   uv python install 3.11
+   uv python install 3.12
    ```
    
 4. Navigate to your cloned repo and create a new virtual environment:
    ```shell
-   cd plenoptic-vss-2025
-   uv venv -p 3.11
+   cd plenoptic-cshl-vision-2026
+   uv venv -p 3.12
    ```
    
 5. Activate your new virtual environment by running:
@@ -78,15 +76,15 @@ Open up `powershell`, then:
    ```powershell
    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
    ```
-2. Install python 3.11:
+2. Install python 3.12:
    ```powershell
-   uv python install 3.11
+   uv python install 3.12
    ```
    
 3. Navigate to your cloned repo and create a new virtual environment:
    ```powershell
-   cd plenoptic-vss-2025
-   uv venv -p 3.11
+   cd plenoptic-cshl-vision-2026
+   uv venv -p 3.12
    ```
    
 4. Activate your new virtual environment by running:
@@ -111,14 +109,14 @@ Open up `powershell`, then:
 1. Install [miniforge](https://github.com/conda-forge/miniforge) if you do not have some version of `conda` or `mamba` installed already.
 2. Create the new virtual environment by running:
     ```shell
-    conda create --name plenoptic-vss25 pip python=3.11 -c conda-forge
+    conda create --name plenoptic-cshl26 pip python=3.12 -c conda-forge
     ```
     Note the `-c conda-forge`!
 
 3. Activate your new environment and navigate to the cloned repo: 
     ```shell
-    conda activate plenoptic-vss25
-    cd plenoptic-vss-2025
+    conda activate plenoptic-cshl26
+    cd plenoptic-cshl-vision-2026
     ```
 ::::::
 
@@ -207,9 +205,9 @@ Open up `powershell`, then:
     python scripts/check_setup.py
     ```
 
-If `check_setup.py` tells you setup was successful, then you're good to go. Otherwise, please come to the satellite event room 30 minutes early on Monday, so we can get things going as quickly as possible.
+If `check_setup.py` tells you setup was successful, then you're good to go.
 
-After doing the above, the `notebooks/` directories within your local copy of the `plenoptic-vss-2025` repository will contain the jupyter notebooks for the event.
+After doing the above, the `notebooks/` directories within your local copy of the `plenoptic-cshl-vision-2026` repository will contain the jupyter notebooks for the event.
 
 During the event, we will run through the notebooks in the order they're listed on this website. To open them, navigate to the `notebooks/` directory, activate your virtual environment and start `jupyter lab`:
 
@@ -226,7 +224,7 @@ During the event, we will run through the notebooks in the order they're listed 
 :sync: posix
 
 ```shell
-cd path/to/plenoptic-vss-2025/notebooks
+cd path/to/plenoptic-cshl-vision-2026/notebooks
 source ../.venv/bin/activate
 jupyter lab
 ```
@@ -236,7 +234,7 @@ jupyter lab
 :sync: windows
 
 ```powershell
-cd path\to\plenoptic-vss-2025\notebooks
+cd path\to\plenoptic-cshl-vision-2026\notebooks
 ..\.venv\Scripts\activate
 jupyter lab
 ```
@@ -248,8 +246,8 @@ jupyter lab
 :sync: conda
 
 ```shell
-cd path/to/plenoptic-vss-2025/notebooks
-conda activate plenoptic-vss25
+cd path/to/plenoptic-cshl-vision-2026/notebooks
+conda activate plenoptic-cshl26
 jupyter lab
 ```
 

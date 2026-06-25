@@ -6,8 +6,8 @@ jupytext:
     format_version: 0.13
     jupytext_version: 1.17.1
 kernelspec:
-  name: vss2025
-  display_name: vss2025
+  name: plenoptic_venv
+  display_name: plenoptic_venv
   language: python
 ---
 

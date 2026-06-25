@@ -18,6 +18,7 @@ This notebook can be downloaded as **{nb-download}`introduction.ipynb`**. See th
 
 :::
 
+(full-intro)=
 # Introduction
 
 The goal of this notebook is to give a brief introduction to plenoptic: we'll use two of our synthesis methods with a handful of models, and try to step through the kind of scientific reasoning that plenoptic's synthesis methods facilitate. If you're interested in learning more about this, ask me questions or [check out our documentation](https://docs.plenoptic.org)!

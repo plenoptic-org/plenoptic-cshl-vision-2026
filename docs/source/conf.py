@@ -8,7 +8,7 @@
 
 import os
 
-project = 'plenoptic satellite event, VSS, 2025'
+project = 'plenoptic satellite event, CSHL Vision, 2026'
 copyright = '2025, Billy Broderick'
 author = 'Billy Broderick'
 
@@ -52,8 +52,8 @@ html_sourcelink_suffix = ""
 myst_enable_extensions = ["colon_fence", "dollarmath"]
 html_theme_options = {
     "home_page_in_toc": True,
-    "github_url": "https://github.com/plenoptic-org/plenoptic-vss-2025",
-    "repository_url": "https://github.com/plenoptic-org/plenoptic-vss-2025",
+    "github_url": "https://github.com/plenoptic-org/plenoptic-cshl-vision-2026",
+    "repository_url": "https://github.com/plenoptic-org/plenoptic-cshl-vision-2026",
     "logo": {
         "alt_text": "Home",
         "image_light": "_static/plenoptic.svg",
