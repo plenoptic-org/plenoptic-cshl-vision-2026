@@ -1,9 +1,9 @@
-FROM docker.io/nvidia/cuda:12.2.0-devel-ubuntu22.04
+FROM docker.io/pytorch/pytorch:2.10.0-cuda12.8-cudnn9-runtime
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-      'python3.11' \
-      'python3.11-venv' \
+      'python3.12' \
+      'python3.12-venv' \
       git \
       curl \
       pandoc \

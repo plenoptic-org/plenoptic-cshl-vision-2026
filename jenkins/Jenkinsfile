@@ -15,7 +15,7 @@ catchError {
           "BRANCH_NAME=${env.BRANCH_NAME}",
           "ISSUE_NUM=${env.BRANCH_NAME.replace('PR-', '')}"
         ]) {
-          sh 'python3.11 -m venv --system-site-packages $HOME'
+          sh 'python3.12 -m venv --system-site-packages $HOME'
           sh '''#!/bin/bash -ex
                 source $HOME/bin/activate
                 pip install -U pip
