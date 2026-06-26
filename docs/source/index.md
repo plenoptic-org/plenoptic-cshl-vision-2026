@@ -137,7 +137,7 @@ Open up `powershell`, then:
     :sync: uv
     
     ```shell
-    uv pip install torch --index-url https://download.pytorch.org/whl/cpu
+    uv pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
     ```
     :::
 
@@ -145,7 +145,7 @@ Open up `powershell`, then:
     :sync: conda
 
     ```shell
-    pip install torch  --index-url https://download.pytorch.org/whl/cpu
+    pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
     ```
     :::
     ::::
@@ -160,7 +160,7 @@ Open up `powershell`, then:
     :sync: uv
     
     ```shell
-    uv pip install torch
+    uv pip install torch torchvision
     ```
     :::
 
@@ -168,7 +168,7 @@ Open up `powershell`, then:
     :sync: conda
 
     ```shell
-    pip install torch
+    pip install torch torchvision
     ```
     :::
     ::::
@@ -183,7 +183,7 @@ Open up `powershell`, then:
     :sync: uv
 
     ```shell
-    uv pip install -r requirements.txt
+    uv pip install -e .
     ```
     :::
 
@@ -191,7 +191,7 @@ Open up `powershell`, then:
     :sync: conda
 
     ```shell
-    pip install -r requirements.txt
+    pip install -e .
     ```
     :::
     ::::
@@ -264,7 +264,7 @@ If you have `ffmpeg` installed and are still having issues, try running `conda u
 
 ## Troubleshooting
 
-- If you are on Mac and get an error related to `ruamel.yaml` (or `clang`) when running `pip install -r requirements.txt`, we think this can be fixed by updating your Xcode Command Line Tools.
+- If you are on Mac and get an error related to `ruamel.yaml` (or `clang`) when running `pip install -e .`, we think this can be fixed by updating your Xcode Command Line Tools.
 - On Windows, you may receive an error saying "running scripts is disabled on this system" when trying to activate the virtual environment. If so, run `Set-ExecutionPolicy -Scope CurrentUser` and enter `Unrestricted`, then press `Y`. (You may have to do this every time you open powershell.)
 - If you have multiple jupyter installs on your path (because e.g., because you have an existing jupyter installation in a conda environment and you then used `uv` to setup the virtual environment for this workshop), jupyter can get confused. (You can check if this is the case by running `which -a jupyter` on Mac / Linux.)
   To avoid this problem, either make sure you only have one virtual environment active (e.g., by running `conda deactivate`) or prepend `JUPYTER_DATA_DIR=$(realpath ..)/.venv/share/jupyter/` to your jupyter command above:

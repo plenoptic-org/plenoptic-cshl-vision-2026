@@ -19,10 +19,9 @@ catchError {
           sh '''#!/bin/bash -ex
                 source $HOME/bin/activate
                 pip install -U pip
-                pip install -r requirements.txt
-                pip install timm torchvision
+                pip install .
                 python ./scripts/strip_text.py
-                
+
                 JENKINS=true make -C docs html O="-T"
                 
                 # we move this to a separate directory to reduce the risk of the checkout
