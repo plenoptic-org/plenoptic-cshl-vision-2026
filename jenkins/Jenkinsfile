@@ -20,7 +20,6 @@ catchError {
                 # make sure we have the git tags, since we need them to correctly version output
                 git fetch --tags
                 uv sync
-                uv run python ./scripts/strip_text.py
 
                 JENKINS=true uv run make -C docs html O="-T"
                 

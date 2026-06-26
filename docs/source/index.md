@@ -4,18 +4,11 @@ This site hosts an introductory notebook and several exercises that serve as fol
 
 The introductory presentation can be found [here](https://presentations.plenoptic.org/2026-07-10_cshl-vision/slides.html).
 
-You are encouraged to follow the [setup](#setup) instructions found on this page, in order to install everything on your laptop. You can then follow along with the [tutorial notebook](full-intro) and work through the exercises (linked in the sidebar).
+You are encouraged to follow the [setup](setup) instructions found on this page, in order to install everything on your laptop and create local copies of the notebooks in the `notebooks/` folder. You can then walk through the [tutorial notebook](full-intro); I recommend opening up `notebooks/introduction-users.ipynb` on your laptop and typing the code into the cells as you read through that notebook, to practice using plenoptic's syntax (you will also have a local copy of the notebook with all the code and text explaining what's happening in `notebooks/introduction.ipynb` if you're impatient). After going through the tutorial notebook, I recommend trying to work through the exercises, which are linked in the sidebar and are the other `ipynb` files in the `notebooks/` directory.
 
-## This website
+You may also find the [glossary](glossary.md) useful.
 
-This website contains rendered versions of the notebooks. During the workshop, attendees should look at the versions found under the `For users` section. These notebooks have some code pre-filled, as well as brief notes to help orient you. If you follow the setup instructions below, you will have editable copies of these notebooks on your laptop, and you are expected to follow along using these notebooks.
-
-If you miss something or fall behind, you can look into the `For presenters` section, which includes the completed code blocks (along with some notes), so you can catch up.
-
-After the workshop, we encourage you to return and check out the `Full notebooks` section, which, as the name implies, includes everything: explanatory text, code, and plots.
-
-You may also find the [glossary](glossary.md) useful as you go through the notebook.
-
+(setup)=
 ## Setup
 
 :::{note}
@@ -28,7 +21,9 @@ If you would just like to install `plenoptic` to use it locally, follow [our ins
    git clone https://github.com/plenoptic-org/plenoptic-cshl-vision-2026.git
    ```
 
-There are many ways to set up a python virtual environment. You can use your favorite way of doing so, installing all dependencies with `pip install .` (note the `.`!) from the root directory of this package. If you don't have a preference or don't know what to do, we recommend using [`uv`](https://docs.astral.sh/uv/getting-started/installation/):
+There are many ways to set up a python virtual environment. You can use your favorite way of doing so, installing all dependencies for these notebooks with `pip install .` (note the `.`!) from the root directory of this package, and then run `jupyter lab` to open up jupyter.
+
+If you don't have a preference or don't know what to do, we recommend using [`uv`](https://docs.astral.sh/uv/getting-started/installation/):
 
 :::::{tab-set}
 :sync-group: os
@@ -148,8 +143,14 @@ notebooks.
 
 ```{toctree}
 :titlesonly:
-can_you_read.md
 glossary.md
+```
+
+```{toctree}
+:glob:
+:caption: Tutorial
+:titlesonly:
+full/*
 ```
 
 ```{toctree}
@@ -157,25 +158,4 @@ glossary.md
 :caption: Exercises
 :titlesonly:
 exercises/*
-```
-
-```{toctree}
-:glob:
-:caption: Full notebooks
-:titlesonly:
-full/*
-```
-
-```{toctree}
-:glob:
-:caption: For users (some code, some text)
-:titlesonly:
-users/*
-```
-
-```{toctree}
-:glob:
-:caption: For presenter reference (all code, no text)
-:titlesonly:
-presenters/*
 ```

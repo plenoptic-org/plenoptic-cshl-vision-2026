@@ -7,11 +7,13 @@ Notebooks to accompany plenoptic presentation CSHL Computational Vision course, 
 
 ## Building the site locally
 
-To build the site locally, clone this repo and install it in a fresh python 3.11 environment (`pip install -e .`). Then run `make -C docs html O="-T"` and open `docs/build/html/index.html` in your browser.
+To build the site locally, clone this repo and install it in a fresh python 3.12 environment (`pip install -e .` / `uv sync`). Then run `make -C docs html O="-T"`/ `uv run make -C docs html O="-T"` and open `docs/build/html/index.html` in your browser.
 
 ## strip_text.py
 
 This script creates two copies of each file found at `docs/source/full/*md`, the copies are placed at `docs/source/users/*.md` and `docs/source/presenters/*.md`. Neither of these copies are run; the presenters version is intended as a reference for presenters, while the users version is what users will start with.
+
+They are not included in the built site, but can be converted to `ipynb` to view work through locally.
 
 For this to work:
 - The title should be on a line by itself, use `#` (e.g., `# My awesome title`) and be the first such line (so no comments above it).

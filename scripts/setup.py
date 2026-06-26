@@ -23,14 +23,17 @@ import warnings
 def main():
     repo_dir = pathlib.Path(__file__).parent.parent
     nb_dir = repo_dir / 'notebooks'
-    scripts_dir = repo_dir / 'scripts'
-    docs_nb_dir = repo_dir / 'docs' / 'source' / 'users'
+    for f in nb_dir.glob("*ipynb"):
+        f.unlink()
+    docs_nb_dir = repo_dir / 'docs' / 'source' / 'full'
+    user_nb_dir = repo_dir / 'docs' / 'source' / 'users'
     ex_nb_dir = repo_dir / 'docs' / 'source' / 'exercises'
     print("Preparing notebooks...")
-    shutil.rmtree(docs_nb_dir, ignore_errors=True)
-    shutil.rmtree(repo_dir / 'docs' / 'source' / 'presenters', ignore_errors=True)
+    shutil.rmtree(user_nb_dir, ignore_errors=True)
+    shutil.rmtree(docs_nb_dir.parent / 'presenters', ignore_errors=True)
     subprocess.run(['python', repo_dir / 'scripts' / 'strip_text.py'], cwd=repo_dir)
-    for f in list(docs_nb_dir.glob('*md')) + list(ex_nb_dir.glob("*md")):
+    nbs = list(docs_nb_dir.glob('*md')) + list(ex_nb_dir.glob("*md")) + list(user_nb_dir.glob("*md"))
+    for f in nbs:
         output_f = (nb_dir / f.name.replace('md', 'ipynb')).absolute()
         output_f.parent.mkdir(exist_ok=True)
         subprocess.run(['jupytext', f.absolute(), '-o', output_f,
