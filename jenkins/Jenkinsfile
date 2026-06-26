@@ -15,14 +15,14 @@ catchError {
           "BRANCH_NAME=${env.BRANCH_NAME}",
           "ISSUE_NUM=${env.BRANCH_NAME.replace('PR-', '')}"
         ]) {
-          sh 'python3.12 -m venv --system-site-packages $HOME'
+          sh "curl -LsSf https://astral.sh/uv/install.sh | sh"
           sh '''#!/bin/bash -ex
-                source $HOME/bin/activate
-                pip install -U pip
-                pip install .
-                python ./scripts/strip_text.py
+                # make sure we have the git tags, since we need them to correctly version output
+                git fetch --tags
+                uv sync
+                uv run python ./scripts/strip_text.py
 
-                JENKINS=true make -C docs html O="-T"
+                JENKINS=true uv run make -C docs html O="-T"
                 
                 # we move this to a separate directory to reduce the risk of the checkout
                 # below clobbering it

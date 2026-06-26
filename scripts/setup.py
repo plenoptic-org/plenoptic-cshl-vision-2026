@@ -6,10 +6,10 @@ try:
 except ImportError:
     raise ImportError(
         "We couldn't find an important package, which likely means"
-        " we're not running from the right virtual "
-        "environment! Did you forget to activate your virtual env"
-        " (using `source` or `conda activate`, depending on how "
-        "you set it up)"
+        " we're not running from the right virtual environment!"
+        " If you used uv, did you forget to prepend uv run to your"
+        " command? If you used something else, did you forget to "
+        "activate your environment?"
     )
 import pathlib
 import shutil
