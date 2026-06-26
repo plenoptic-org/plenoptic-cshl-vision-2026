@@ -23,6 +23,9 @@ extensions = [
     'sphinx.ext.intersphinx'
 ]
 
+# hacky workaround for intersphinx issue: https://github.com/sphinx-doc/sphinx/issues/14435
+import requests
+requests.get("https://docs.plenoptic.org/docs/branch/main/objects.inv")
 intersphinx_mapping = {'plenoptic': ("https://docs.plenoptic.org/docs/branch/main/", None)}
 
 templates_path = ['_templates']
