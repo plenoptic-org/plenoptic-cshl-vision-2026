@@ -61,7 +61,7 @@ for md in glob("docs/source/full/*md"):
         elif "<div" in t and "render" in t:
             if "render-presenter" in t or "render-all" in t:
                 # remove all divs
-                t = re.sub(".*div.*", "", t)
+                t = re.sub(r".*div.*", "", t)
                 presenter_text.append(t)
         else:
             presenter_text.append(t)
@@ -79,7 +79,7 @@ for md in glob("docs/source/full/*md"):
         if "<div" in t and "render" in t:
             if "render-user" in t or "render-all" in t:
                 # remove all divs
-                t = re.sub("\s*</?div.*", "", t)
+                t = re.sub(r"\s*</?div.*", "", t)
                 user_text.append(t)
         elif ":::" in t:
             if "render-user" in t or "render-all" in t:
