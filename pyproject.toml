@@ -32,7 +32,6 @@ docs = [
 ]
 
 dev = [
-    "plenoptic[docs]",
     "ruff",
 ]
 
