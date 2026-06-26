@@ -30,3 +30,6 @@ docs = [
     "sphinx-togglebutton",
     "sphinx-design",
 ]
+
+[tool.setuptools.packages]
+find = {namespaces = false}
