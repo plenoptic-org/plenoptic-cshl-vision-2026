@@ -28,7 +28,10 @@ import requests
 
 plen_docs_url = "https://docs.plenoptic.org/docs/pulls/460"
 requests.get(f"{plen_docs_url}/objects.inv")
-intersphinx_mapping = {"plenoptic": (plen_docs_url, None)}
+intersphinx_mapping = {
+    "plenoptic": (plen_docs_url, None),
+    "torch": ("https://docs.pytorch.org/docs/stable/", None),
+}
 
 templates_path = ["_templates"]
 exclude_patterns = []

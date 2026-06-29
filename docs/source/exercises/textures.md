@@ -28,20 +28,29 @@ plt.rcParams["animation.ffmpeg_args"] = ["-threads", "1"]
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 ```
 
-The texture model requires a slightly different setup than the other models we were looking at. In particular, we use coarse-to-fine synthesis, as originally described in the Portilla and Simoncelli paper, which starts with coarsest scales (i.e., lowest spatial frequencies) of the model representation and moves to finer and finer scales.
+The texture model requires a little more configuring to find reliably good metamers. In the [original paper](https://www.cns.nyu.edu/pub/eero/portilla99-reprint.pdf), the authors use coarse-to-fine synthesis, which starts with coarsest scales (i.e., lowest spatial frequencies) of the model representation and moves to finer and finer scales. In plenoptic, we have found that this is unnecessary for finding good metamers (though it is possible, using {external+plenoptic:class}`plenoptic.MetamerCTF`), as long as one uses the {external+torchvision:class}`torch.optim.LBFGS` optimizer and a custom loss function, {external+plenoptic:func}`plenoptic.loss.portilla_simoncelli_loss_factory`. (See [this issue](https://github.com/plenoptic-org/plenoptic/issues/365) if you are interested in how we came to this suggestion.)
 
-In plenoptic, this is handled with a different object, {external+plenoptic:class}`plenoptic.MetamerCTF`. This object is interacted with in the same manner as `Metamer`, except it has several additional arguments for `synthesize` which control how we move between scales. The setup below indicates that we should optimize each scale for 3 iterations and then move on.
+The following block synthesizes a texture metamer using our suggested setup:
 
 ```{code-cell} ipython3
 img = po.data.reptile_skin().to(DEVICE)
 ps = po.models.PortillaSimoncelli(img.shape[-2:])
 ps.to(DEVICE)
-im_init = torch.rand_like(img) * 0.2 + img.mean()
-met = po.MetamerCTF(img, ps, loss_function=po.loss.l2_norm)
-met.setup(im_init)
-met.synthesize(
-    max_iter=500, store_progress=10, change_scale_criterion=None, ctf_iters_to_check=3
+loss = po.loss.portilla_simoncelli_loss_factory(model, img)
+met = po.Metamer(
+    img,
+    model,
+    loss_function=loss,
 )
+opt_kwargs = {
+    "max_iter": 10,
+    "max_eval": 10,
+    "history_size": 100,
+    "line_search_fn": "strong_wolfe",
+    "lr": 1,
+}
+met.setup(optimizer=torch.optim.LBFGS, optimizer_kwargs=opt_kwargs)
+met.synthesize(max_iter=150)
 ```
 
 ```{code-cell} ipython3
@@ -62,15 +71,12 @@ As we practiced earlier, we can change the target image for metamer synthesis st
 :::{admonition} More texture images
 :class: hint
 
-If you run the following lines, you can download some additional texture images used in the original Portilla and Simoncelli paper for use with the model:
+If you run the following lines, you can download some additional texture images used in the original Portilla and Simoncelli paper for use with the model.
 
-If the following code gives you an error, make sure that `pooch` is installed in your virtual environment.
 :::
 
 ```{code-cell} ipython3
-from plenoptic.data.fetch import fetch_data
-
-texture_path = fetch_data("portilla_simoncelli_images.tar.gz")
+texture_path = po.data.fetch_data("portilla_simoncelli_images.tar.gz")
 
 natural = [
     "3a",
