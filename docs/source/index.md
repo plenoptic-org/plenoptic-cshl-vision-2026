@@ -12,7 +12,7 @@ You may also find the [glossary](glossary.md) useful.
 ## Setup
 
 :::{note}
-If you would just like to install `plenoptic` to use it locally, follow [our installation instructions](https://docs.plenoptic.org/docs/tags/2.0.1/getting_started/index.html). This tutorial contains some extra packages for this specific build.
+If you would just like to install `plenoptic` to use it locally, follow {external+plenoptic:doc}`our installation instructions <getting_started/index>`. This tutorial contains some extra packages for this specific build.
 :::
 
 0. Make sure you have `git` installed. It is installed by default on most Mac and Linux machines, but you may need to install it if you are on Windows. [These instructions](https://github.com/git-guides/install-git) should help.
@@ -23,7 +23,7 @@ If you would just like to install `plenoptic` to use it locally, follow [our ins
 
 There are many ways to set up a python virtual environment. You can use your favorite way of doing so, installing all dependencies for these notebooks with `pip install .` (note the `.`!) from the root directory of this package, and then run `jupyter lab` to open up jupyter.
 
-If you don't have a preference or don't know what to do, we recommend using [`uv`](https://docs.astral.sh/uv/getting-started/installation/):
+If you don't have a preference or don't know what to do, we recommend using [uv](https://docs.astral.sh/uv/getting-started/installation/):
 
 :::::{tab-set}
 :sync-group: os
@@ -31,17 +31,17 @@ If you don't have a preference or don't know what to do, we recommend using [`uv
 ::::{tab-item} Mac/Linux
 :sync: posix
 
-2. Install [`uv`](https://docs.astral.sh/uv/getting-started/installation/) by running:
+2. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) by running:
    ```shell
    curl -LsSf https://astral.sh/uv/install.sh | sh
    ```
-   
+
 3. Restart your terminal to make sure `uv` is available.
 4. Install python 3.12:
    ```shell
    uv python install 3.12
    ```
-   
+
 5. Navigate to your cloned repo and run `uv sync`, which creates the virtual environment and installs all dependencies:
    ```shell
    cd plenoptic-cshl-vision-2026
@@ -54,7 +54,7 @@ If you don't have a preference or don't know what to do, we recommend using [`uv
 
 Open up `powershell`, then:
 
-2. Install [`uv`](https://docs.astral.sh/uv/getting-started/installation/):
+2. Install [uv](https://docs.astral.sh/uv/getting-started/installation/):
    ```powershell
    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
    ```
@@ -63,18 +63,18 @@ Open up `powershell`, then:
    ```powershell
    uv python install 3.12
    ```
-   
+
 5. Navigate to your cloned repo and run `uv sync`, which creates the virtual environment and installs all dependencies:
    ```powershell
    cd plenoptic-cshl-vision-2026
    uv sync -p 3.12
    ```
-   
+
    :::{warning}
    You may receive an error saying "running scripts is disabled on this system". If so, run `Set-ExecutionPolicy -Scope CurrentUser` and enter `Unrestricted`, then press `Y`.
-   
+
    You may have to do this every time you open powershell.
-   
+
    :::
 
 ::::

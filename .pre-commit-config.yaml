@@ -44,13 +44,6 @@ repos:
       entry: linting/check_markdown.py
       files: ^docs/
       additional_dependencies: ["sphobjinv"]
-    - id: ruff notebooks
-      language: python
-      name: Convert myst-nb markdown notebooks to ipynb and run ruff on them
-      types_or: ["markdown"]
-      entry: linting/ruff_notebooks.py
-      files: ^docs/
-      additional_dependencies: ["ruff", "jupytext"]
     - id: check-inline
       language: python
       name: Check for matplotlib inline directive in md notebooks

@@ -8,27 +8,29 @@
 
 import os
 
-project = 'plenoptic satellite event, CSHL Vision, 2026'
-copyright = '2025, Billy Broderick'
-author = 'Billy Broderick'
+project = "plenoptic satellite event, CSHL Vision, 2026"
+copyright = "2025, Billy Broderick"
+author = "Billy Broderick"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'myst_nb',
-    'sphinx_copybutton',
-    'sphinx_togglebutton',
-    'sphinx_design',
-    'sphinx.ext.intersphinx'
+    "myst_nb",
+    "sphinx_copybutton",
+    "sphinx_togglebutton",
+    "sphinx_design",
+    "sphinx.ext.intersphinx",
 ]
 
 # hacky workaround for intersphinx issue: https://github.com/sphinx-doc/sphinx/issues/14435
 import requests
-requests.get("https://docs.plenoptic.org/docs/branch/main/objects.inv")
-intersphinx_mapping = {'plenoptic': ("https://docs.plenoptic.org/docs/branch/main/", None)}
 
-templates_path = ['_templates']
+plen_docs_url = "https://docs.plenoptic.org/docs/pulls/460"
+requests.get(f"{plen_docs_url}/objects.inv")
+intersphinx_mapping = {"plenoptic": (plen_docs_url, None)}
+
+templates_path = ["_templates"]
 exclude_patterns = []
 
 
@@ -37,9 +39,8 @@ exclude_patterns = []
 
 # max time (in secs) per notebook cell. here, we disable this
 nb_execution_timeout = -1
-# we have two versions of each notebook, one with explanatory text and one without
-# (which ends in `-stripped.md`). we don't need to run both of them
-nb_execution_excludepatterns = ["*-users*", "*-presenters*"]
+nb_execution_excludepatterns = ["users/*", "presenters/*", "*intro*", "exercises/*"]
+# nb_execution_excludepatterns = ["users/*", "presenters/*"]
 nb_execution_mode = "cache"
 nb_execution_raise_on_error = True
 # on Jenkins, always want to use kernel called "python3" (otherwise, it's system specific)
@@ -47,10 +48,10 @@ if os.environ.get("JENKINS"):
     nb_kernel_rgx_aliases = {".*": "python3"}
 else:
     nb_kernel_rgx_aliases = {}
-html_theme = 'sphinx_book_theme'
-html_static_path = ['_static']
-html_css_files = ['custom.css']
-html_favicon = '_static/plenoptic.ico'
+html_theme = "sphinx_book_theme"
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]
+html_favicon = "_static/plenoptic.ico"
 html_sourcelink_suffix = ""
 myst_enable_extensions = ["colon_fence", "dollarmath"]
 html_theme_options = {

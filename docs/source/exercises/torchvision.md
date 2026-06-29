@@ -1,15 +1,14 @@
 ---
 jupytext:
-  formats: md:myst
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.17.1
+    jupytext_version: 1.17.3
 kernelspec:
-  name: plenoptic_venv
   display_name: plenoptic_venv
   language: python
+  name: plenoptic_venv
 ---
 
 # Synthesizing model metamers for TorchVision / TIMM models
@@ -21,47 +20,49 @@ The following requires you to install `torchvision` and/or `timm` in your virtua
 :::
 
 ```{code-cell} ipython3
+# needed for the plotting/animating:
+import matplotlib.pyplot as plt
 import plenoptic as po
 import torch
-# needed for the plotting/animating:
-%matplotlib inline
-import matplotlib.pyplot as plt
-plt.rcParams['animation.html'] = 'html5'
+
+plt.rcParams["animation.html"] = "html5"
 # use single-threaded ffmpeg for animation writer
-plt.rcParams['animation.writer'] = 'ffmpeg'
-plt.rcParams['animation.ffmpeg_args'] = ['-threads', '1']
-DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+plt.rcParams["animation.writer"] = "ffmpeg"
+plt.rcParams["animation.ffmpeg_args"] = ["-threads", "1"]
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+import numpy as np
 import torchvision
 from torchvision.models import feature_extraction
-import numpy as np
 ```
 
 When synthesizing model metamers for convolutional neural networks, researchers often pick a specific layer whose output they want to match (e.g., [Feather et al., 2023](https://www.nature.com/articles/s41593-023-01442-0)).
 
-`torchvision` contains a "feature extractor" which we can use to grab the activation from a specific layer for most pytorch models, and we can use a small wrapper to handle this for us (this class will eventually be part of plenoptic -- in a release probably later this summer). In the following (large!) block of code, only the `__init__` and `forward` are necessary. However, defining `plot_representation` method in this way allows us to make use of the built-in `plot_synthesis_status` and `animate` functions we used in some of the other notebooks!
+`torchvision` contains a "feature extractor" which we can use to grab the activation from a specific layer for most pytorch models, and we can use a small wrapper to handle this for us (this class will eventually be part of plenoptic -- in a release probably later this summer). In the following (large!) block of code, only the `__init__` and `forward` are necessary. However, defining `plot_representation` method in this way allows us to make use of the built-in {func}`plenoptic.plot.synthesis_status` and {func}`plenoptic.plot.synthesis_animate` functions we used in some of the other notebooks!
 
 ```{code-cell} ipython3
 class TorchVisionModel(torch.nn.Module):
     def __init__(self, model, return_node, transform=None):
         super().__init__()
         self.transform = transform
-        self.extractor = feature_extraction.create_feature_extractor(model, [return_node])
+        self.extractor = feature_extraction.create_feature_extractor(
+            model, [return_node]
+        )
         self.model = model
         self.return_node = return_node
-        
+
     def forward(self, x):
         if self.transform is not None:
             x = self.transform(x)
         return self.extractor(x)[self.return_node]
-           
+
     def plot_representation(
         self,
         data: torch.Tensor,
-        ax = None,
-        figsize = (15, 15),
-        ylim = None,
-        batch_idx = 0,
-        title = None,
+        ax=None,
+        figsize=(15, 15),
+        ylim=None,
+        batch_idx=0,
+        title=None,
     ):
         # Select the batch index
         data = data[batch_idx]
@@ -76,16 +77,23 @@ class TorchVisionModel(torch.nn.Module):
 
         # Determine figure layout
         if ax is None:
-            fig, axes = plt.subplots(2, 1, figsize=figsize, gridspec_kw={"height_ratios": [1, 1]})
+            fig, axes = plt.subplots(
+                2, 1, figsize=figsize, gridspec_kw={"height_ratios": [1, 1]}
+            )
         else:
-            ax = po.tools.clean_up_axes(ax, False, ["top", "right", "bottom", "left"], ["x", "y"])
+            ax = po.tools.clean_up_axes(
+                ax, False, ["top", "right", "bottom", "left"], ["x", "y"]
+            )
             gs = ax.get_subplotspec().subgridspec(2, 1, height_ratios=[3, 1])
             fig = ax.figure
             axes = [fig.add_subplot(gs[0]), fig.add_subplot(gs[1])]
 
         # Plot average error across channels
-        po.imshow(
-            ax=axes[0], image=spatial_error[None, None, ...], title="Average Error Across Channels", vrange="auto0"
+        po.plot.imshow(
+            ax=axes[0],
+            image=spatial_error[None, None, ...],
+            title="Average Error Across Channels",
+            vrange="auto0",
         )
         # axes[0].set_title()
 
@@ -145,9 +153,9 @@ Now we can use the above like any other model we've used so far, with one note: 
 ```{code-cell} ipython3
 img = po.data.einstein(as_gray=False).to(DEVICE)
 model.to(DEVICE)
-po.tools.remove_grad(model)
+po.remove_grad(model)
 model.eval()
-met = po.synth.Metamer(img, model)
+met = po.Metamer(img, model)
 ```
 
 ```{code-cell} ipython3
@@ -155,7 +163,7 @@ met.synthesize(max_iter=1500, stop_criterion=1e-11, store_progress=10)
 ```
 
 ```{code-cell} ipython3
-po.synth.metamer.plot_synthesis_status(met, ylim=False)
+po.plot.synthesis_status(met, ylim=False);
 ```
 
 ## Use a model from `timm`

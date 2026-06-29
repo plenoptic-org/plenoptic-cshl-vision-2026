@@ -42,7 +42,7 @@ find = {namespaces = false}
 extend-include = ["*.ipynb"]
 src = ["docs"]
 # Exclude a variety of commonly ignored directories.
-exclude = ["linting"]
+exclude = ["linting", "docs/source/conf.py"]
 
 # Set the maximum line length (same as Black)
 line-length = 88

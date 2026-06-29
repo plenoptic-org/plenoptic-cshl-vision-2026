@@ -4,22 +4,21 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.17.1
+    jupytext_version: 1.17.3
 kernelspec:
-  name: plenoptic_venv
   display_name: plenoptic_venv
   language: python
+  name: plenoptic_venv
 ---
 
 # Minimal eigendistortion synthesis example
 
-See [plenoptic docs](https://docs.plenoptic.org/) for more details.
+See {external+plenoptic:doc}`plenoptic User Guide <user_guide/index>` for more details.
 
 ```{code-cell} ipython3
 import plenoptic as po
 import torch
 # needed for the plotting/animating:
-%matplotlib inline
 import matplotlib.pyplot as plt
 plt.rcParams['animation.html'] = 'html5'
 # use single-threaded ffmpeg for animation writer
@@ -34,14 +33,14 @@ The following code block:
 
 ```{code-cell} ipython3
 img = po.data.einstein().to(DEVICE)
-model = po.simul.LuminanceGainControl(
+model = po.models.LuminanceGainControl(
     kernel_size=(31, 31), pad_mode="circular",
     pretrained=True, cache_filt=True
 )
 model.to(DEVICE)
-po.tools.remove_grad(model)
+po.remove_grad(model)
 model.eval()
-eig = po.synth.Eigendistortion(img, model)
+eig = po.Eigendistortion(img, model)
 eig.synthesize(max_iter=1000)
 ```
 
@@ -52,13 +51,13 @@ This means that, to ensure we have actually found the eigendistortions, we need 
 We can then visualize our outputs:
 
 ```{code-cell} ipython3
-po.imshow(eig.eigendistortions, title=["Max", "Min"]);
+po.plot.imshow(eig.eigendistortions, title=["Max", "Min"]);
 ```
 
 And we can add them to the reference image, to see what they look like (scaled up for visibility):
 
 ```{code-cell} ipython3
-po.imshow(eig.image + 5*eig.eigendistortions, title=["Max", "Min"]);
+po.plot.imshow(eig.image + 5*eig.eigendistortions, title=["Max", "Min"]);
 ```
 
 ## Different target image
@@ -68,7 +67,7 @@ Try using a different target image than the one of Einstein above and running ei
 :::{admonition} Loading other images
 :class: hint
 
-Try one of the other [included images](https://docs.plenoptic.org/docs/branch/main/api/plenoptic.data.html#module-plenoptic.data) or use [`load_images`](https://docs.plenoptic.org/docs/branch/main/api/plenoptic.tools.html#plenoptic.tools.data.load_images) to load one from disk.
+Try one of the other {external+plenoptic:ref}`included images <images-api>` or use {external+plenoptic:func}`plenoptic.load_images` to load one from disk.
 
 :::
 
@@ -77,20 +76,20 @@ Try one of the other [included images](https://docs.plenoptic.org/docs/branch/ma
 
 img = # WRITE SOMETHING NEW HERE
 img = img.to(DEVICE)
-model = po.simul.LuminanceGainControl(
+model = po.models.LuminanceGainControl(
     kernel_size=(31, 31), pad_mode="circular",
     pretrained=True, cache_filt=True
 )
 model.to(DEVICE)
-po.tools.remove_grad(model)
+po.remove_grad(model)
 model.eval()
-eig = po.synth.Eigendistortion(img, model)
+eig = po.Eigendistortion(img, model)
 eig.synthesize(max_iter=1000)
-po.imshow([eig.eigendistortions, eig.image+5*eig.eigendistortions]);
+po.plot.imshow([eig.eigendistortions, eig.image+5*eig.eigendistortions]);
 ```
 
 ## Other models
 
-Try synthesizing eigendistortions with a different model! Try one of the other models from the [`frontend`](https://docs.plenoptic.org/docs/branch/main/api/plenoptic.simulate.models.html#module-plenoptic.simulate.models.frontend) module.
+Try any of the above with a different model! Try one of the other {external+plenoptic:ref}`LGN-inspired models <models-api>`.
 
 If you want a more complex model, see the [torchvision](./torchvision.md) notebooks.

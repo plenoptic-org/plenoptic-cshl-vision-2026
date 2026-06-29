@@ -4,23 +4,22 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.17.1
+    jupytext_version: 1.17.3
 kernelspec:
-  name: plenoptic_venv
   display_name: plenoptic_venv
   language: python
+  name: plenoptic_venv
 ---
 
 # Minimal metamer synthesis example
 
-See [plenoptic docs](https://docs.plenoptic.org/) for more details.
+See {external+plenoptic:doc}`plenoptic User Guide <user_guide/index>` for more details.
 
 ```{code-cell} ipython3
 import plenoptic as po
 import torch
 # needed for the plotting/animating:
 import matplotlib.pyplot as plt
-%matplotlib inline
 plt.rcParams['animation.html'] = 'html5'
 # use single-threaded ffmpeg for animation writer
 plt.rcParams['animation.writer'] = 'ffmpeg'
@@ -34,14 +33,14 @@ The following code block:
 
 ```{code-cell} ipython3
 img = po.data.einstein().to(DEVICE)
-model = po.simul.LuminanceGainControl(
+model = po.models.LuminanceGainControl(
     kernel_size=(31, 31), pad_mode="circular",
     pretrained=True, cache_filt=True
 )
 model.to(DEVICE)
-po.tools.remove_grad(model)
+po.remove_grad(model)
 model.eval()
-met = po.synth.Metamer(img, model)
+met = po.Metamer(img, model)
 met.synthesize(max_iter=1300, stop_criterion=1e-11, store_progress=10)
 ```
 
@@ -50,7 +49,7 @@ Next, we need to ensure that the metamer synthesis succeeded. In the previous ex
 There are many possible visualizations one can make. We have a helper function that should help get you started. It shows the metamer, the synthesis loss over time, and (if possible) the representation error.
 
 ```{code-cell} ipython3
-fig, _ = po.synth.metamer.plot_synthesis_status(met)
+fig = po.plot.synthesis_status(met)
 ```
 
 ```{code-cell} ipython3
@@ -62,7 +61,7 @@ In the above figure, we can see that the loss has decreased to a low value and, 
 The representation error is easier to understand if we view it over time, which we can do with the following helper function:
 
 ```{code-cell} ipython3
-po.synth.metamer.animate(met)
+po.plot.synthesis_animate(met)
 ```
 
 We can see that the representation error decreases relatively uniformly across the image.
@@ -74,7 +73,7 @@ Try using a different target image than the one of Einstein above and running me
 :::{admonition} Loading other images
 :class: hint
 
-Try one of the other [included images](https://docs.plenoptic.org/docs/branch/main/api/plenoptic.data.html#module-plenoptic.data) or use [`load_images`](https://docs.plenoptic.org/docs/branch/main/api/plenoptic.tools.html#plenoptic.tools.data.load_images) to load one from disk.
+Try one of the other {external+plenoptic:ref}`included images <images-api>` or use {external+plenoptic:func}`plenoptic.load_images` to load one from disk.
 
 :::
 
@@ -83,9 +82,9 @@ Try one of the other [included images](https://docs.plenoptic.org/docs/branch/ma
 
 img = # WRITE SOMETHING NEW HERE
 img = img.to(DEVICE)
-met = po.synth.Metamer(img, model)
+met = po.Metamer(img, model)
 met.synthesize(max_iter=1300, stop_criterion=1e-11, store_progress=10)
-po.synth.metamer.plot_synthesis_status(met);
+po.plot.synthesis_status(met);
 ```
 
 And maybe animate to see what synthesis looks like?
@@ -93,7 +92,7 @@ And maybe animate to see what synthesis looks like?
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-po.synth.metamer.animate(met)
+po.plot.synthesis_animate(met)
 ```
 
 ## Different initial image
@@ -103,10 +102,10 @@ While we often initialize from a patch of white noise, it can be interesting to 
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-met = po.synth.Metamer(img, model)
+met = po.Metamer(img, model)
 met.setup(initial_image=) # FINISH THE CALL TO setup
 met.synthesize(max_iter=1300, stop_criterion=1e-11, store_progress=10)
-po.synth.metamer.plot_synthesis_status(met);
+po.plot.synthesis_status(met);
 ```
 
 And maybe animate to see what synthesis looks like?
@@ -114,11 +113,11 @@ And maybe animate to see what synthesis looks like?
 ```{code-cell} ipython3
 :tags: [skip-execution]
 
-po.synth.metamer.animate(met)
+po.plot.synthesis_animate(met)
 ```
 
 ## Other models
 
-Try any of the above with a different model! Try one of the other models from the [`frontend`](https://docs.plenoptic.org/docs/branch/main/api/plenoptic.simulate.models.html#module-plenoptic.simulate.models.frontend) module.
+Try any of the above with a different model! Try one of the other {external+plenoptic:ref}`LGN-inspired models <models-api>`.
 
 If you want a more complex model, see the [texture](./textures.md) or [torchvision](./torchvision.md) notebooks.
