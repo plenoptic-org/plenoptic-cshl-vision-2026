@@ -80,11 +80,12 @@ If you're curious, try it out and see! (Just pass `transform` instead of `norm` 
 
 :::
 
-Finally, we'll pass our neural network, target layer, and preprocessing transform to plenoptic's [FeatureExtractorModel](https://docs.plenoptic.org/docs/pulls/460/api/generated/plenoptic.models.FeatureExtractorModel.html#plenoptic.models.FeatureExtractorModel), moving it to our specified device:
+Finally, we'll pass our neural network, target layer, and preprocessing transform to plenoptic's [FeatureExtractorModel](https://docs.plenoptic.org/docs/pulls/460/api/generated/plenoptic.models.FeatureExtractorModel.html#plenoptic.models.FeatureExtractorModel), moving it to our specified device and removing the gradient from all learnable parameters (as models in plenoptic {external+plenoptic:ref}`are fixed <remove-grad-doc>`):
 
 ```{code-cell} ipython3
 model = po.models.FeatureExtractorModel(deepnet, "layer3", norm)
 model.to(DEVICE)
+po.remove_grad(model)
 ```
 
 ## Preparing the image
@@ -151,6 +152,7 @@ The authors of Feather et al., 2023 used two additional checks to verify that me
 The following cell shows how to compute the image categories:
 
 ```{code-cell} ipython3
+imagenet_categories = np.asarray(weights.meta["categories"])
 def get_category(image):
     image_cat = po.to_numpy(
         torch.nn.functional.softmax(deepnet(norm(image)), dim=1).squeeze()

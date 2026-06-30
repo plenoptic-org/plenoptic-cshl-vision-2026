@@ -147,10 +147,6 @@ Set up the Gaussian model. Models in plenoptic must:
 ```{code-cell} ipython3
 :tags: [render-all]
 
-# this is a convenience function for creating a simple Gaussian kernel
-from plenoptic.simulate.canonical_computations.filters import circular_gaussian2d
-
-
 # Simple Gaussian convolutional model
 class Gaussian(torch.nn.Module):
     # in __init__, we create the object, initializing the convolutional weights and nonlinearity
@@ -160,7 +156,8 @@ class Gaussian(torch.nn.Module):
         self.conv = torch.nn.Conv2d(
             1, 1, kernel_size=kernel_size, padding=(0, 0), bias=False
         )
-        self.conv.weight.data[0, 0] = circular_gaussian2d(kernel_size, std_dev)
+        # this is a convenience function for creating a simple Gaussian kernel
+        self.conv.weight.data[0, 0] = po.process.circular_gaussian2d(kernel_size, std_dev)
 
     # the forward pass of the model defines how to get from an image to the representation
     def forward(self, x):
@@ -264,7 +261,7 @@ This next cell will take a while to run --- making animations in matplotlib is a
 
 ```{code-cell} ipython3
 po.plot.synthesis_animate(
-    metamer, included_plots=["display_metamer", "plot_loss"], figsize=(12, 5)
+    metamer, included_plots=["synthesis_imshow", "synthesis_loss"], figsize=(12, 5)
 )
 ```
 

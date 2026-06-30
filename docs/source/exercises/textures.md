@@ -42,10 +42,10 @@ The following block synthesizes a texture metamer using our suggested setup:
 img = po.data.reptile_skin().to(DEVICE)
 ps = po.models.PortillaSimoncelli(img.shape[-2:])
 ps.to(DEVICE)
-loss = po.loss.portilla_simoncelli_loss_factory(model, img)
+loss = po.loss.portilla_simoncelli_loss_factory(ps, img)
 met = po.Metamer(
     img,
-    model,
+    ps,
     loss_function=loss,
 )
 opt_kwargs = {
@@ -56,7 +56,7 @@ opt_kwargs = {
     "lr": 1,
 }
 met.setup(optimizer=torch.optim.LBFGS, optimizer_kwargs=opt_kwargs)
-met.synthesize(max_iter=150)
+met.synthesize(max_iter=100, store_progress=True)
 ```
 
 ```{code-cell} ipython3
