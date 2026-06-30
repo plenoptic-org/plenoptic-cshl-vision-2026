@@ -43,8 +43,8 @@ exclude_patterns = []
 
 # max time (in secs) per notebook cell. here, we disable this
 nb_execution_timeout = -1
-nb_execution_excludepatterns = ["users/*", "presenters/*", "*intro*", "exercises/*"]
-# nb_execution_excludepatterns = ["users/*", "presenters/*"]
+# nb_execution_excludepatterns = ["users/*", "presenters/*", "*intro*", "exercises/*"]
+nb_execution_excludepatterns = ["users/*", "presenters/*"]
 nb_execution_mode = "cache"
 nb_execution_raise_on_error = True
 # on Jenkins, always want to use kernel called "python3" (otherwise, it's system specific)
