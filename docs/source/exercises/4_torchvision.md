@@ -296,7 +296,7 @@ model = po.models.FeatureExtractorModel(deepnet, target_layer, norm)
 model.to(DEVICE)
 ```
 
-And finally, instantiate the metamer and run synthesis. Note that the arguments to {external+plenoptic:meth}`~plenoptic.Metamer.setup` will almost certainly need to be changed, but we've repeated the ones used for ResNet50 as a starting point. You may also need to change the loss function, see [](textures) for an example of changing this, and {external+plenoptic:class}`~plenoptic.Metamer` documentation for more details.
+And finally, instantiate the metamer and run synthesis. Note that the arguments to {external+plenoptic:meth}`~plenoptic.Metamer.setup` will almost certainly need to be changed, but we've repeated the ones used for ResNet50 as a starting point. You may also need to change the loss function, see [](3_textures) for an example of changing this, and {external+plenoptic:class}`~plenoptic.Metamer` documentation for more details.
 
 ```{code-cell} ipython3
 :tags: [skip-execution]

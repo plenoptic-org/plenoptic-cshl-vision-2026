@@ -123,4 +123,4 @@ po.plot.synthesis_animate(met)
 
 Try any of the above with a different model! Try one of the other {external+plenoptic:ref}`LGN-inspired models <models-api>`.
 
-If you want a more complex model, see the [](textures) or [](torchvision) exercises.
+If you want a more complex model, see the [](3_textures) or [](4_torchvision) exercises.
