@@ -162,3 +162,5 @@ jupyter_execute/
 docs/source/users
 docs/source/presenters
 notebooks/
+
+*npz
