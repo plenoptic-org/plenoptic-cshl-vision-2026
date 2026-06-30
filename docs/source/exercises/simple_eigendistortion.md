@@ -92,4 +92,4 @@ po.plot.imshow([eig.eigendistortions, eig.image+5*eig.eigendistortions]);
 
 Try any of the above with a different model! Try one of the other {external+plenoptic:ref}`LGN-inspired models <models-api>`.
 
-If you want a more complex model, see the [torchvision](./torchvision.md) notebooks.
+If you want a more complex model, see the [](torchvision) notebooks.

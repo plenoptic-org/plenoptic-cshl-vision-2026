@@ -710,7 +710,7 @@ In this notebook, we saw the basics of using `plenoptic` to investigate the sens
 
 `plenoptic` includes a variety of {external+plenoptic:ref}`models <models-api>` and {external+plenoptic:ref}`model components <processing-api>`, and you can (and should!) use the synthesis methods with your own models.
 
-Our documentation also has an {external+plenoptic:ref}`example <feature_extractor>` showing how to use models from [torchvision](https://pytorch.org/vision/stable/index.html) and [timm](https://huggingface.co/docs/timm/main/en) (which contains a variety of pretrained neural network models) with plenoptic.
+Our documentation also has an [example](https://docs.plenoptic.org/docs/pulls/460/user_guide/models_and_metrics/feature_extractor.html) showing how to use models from [torchvision](https://pytorch.org/vision/stable/index.html) and [timm](https://huggingface.co/docs/timm/main/en) (which contains a variety of pretrained neural network models) with plenoptic.
 
 In order to use your own models with plenoptic, check the {external+plenoptic:ref}`documentation <models-doc>` for the specific requirements, and use the {external+plenoptic:func}`~plenoptic.validate.validate_model` function to check compatibility. If you have issues or want feedback, we're happy to help --- just post on the [Github discussions page](https://github.com/plenoptic-org/plenoptic/discussions)!
 

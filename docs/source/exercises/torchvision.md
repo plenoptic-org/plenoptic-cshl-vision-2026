@@ -4,19 +4,20 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.17.3
+    jupytext_version: 1.19.3
 kernelspec:
   display_name: plenoptic_venv
   language: python
   name: plenoptic_venv
 ---
 
-# Synthesizing model metamers for TorchVision / TIMM models
+(torchvision)=
+# Synthesizing Deep Net Model Metameres
 
-[timm](https://huggingface.co/timm) and [torchvision](https://docs.pytorch.org/vision/main/models.html) are two model zoos from the deep learning community that contain many different models which one can use with plenoptic!
+plenoptic is compatible with any model written in pytorch, including deep neural networks from the model zoos [timm](https://huggingface.co/timm) and [torchvision](https://docs.pytorch.org/vision/main/models.html). In this exercise, we'll grab ResNet50 from torchvision and show how to generate metamers for several of its intermediate representations, as done in [Feather et al. 2023](https://mcdermottlab.mit.edu/papers/Feather_etal_2023_deep_metamers.pdf).
 
-:::{warning}
-The following requires you to install `torchvision` and/or `timm` in your virtual environment, which can be done with `pip`.
+:::{attention}
+It is recommended that you first work through the [](simple-metamer) exercise before this one! The optimization procedure here is a bit more complex and takes longer.
 :::
 
 ```{code-cell} ipython3
@@ -32,164 +33,279 @@ plt.rcParams["animation.ffmpeg_args"] = ["-threads", "1"]
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 import numpy as np
 import torchvision
-from torchvision.models import feature_extraction
 ```
 
-When synthesizing model metamers for convolutional neural networks, researchers often pick a specific layer whose output they want to match (e.g., [Feather et al., 2023](https://www.nature.com/articles/s41593-023-01442-0)).
+When synthesizing model metamers for convolutional neural networks, researchers often pick a specific layer whose output they want to match. If we look at [Feather et al. 2023](https://mcdermottlab.mit.edu/papers/Feather_etal_2023_deep_metamers.pdf) Figure 2e, we can see an interesting progression in layers 2 through 4: the layer 2 metamer looks almost identical to the target image, the layer 3 metamer starts to add RGB noise, and the layer 4 is almost completely unidentifiable, looking almost completely like random RGB noise. We'll pick layer 3 from now, and you're encouraged to try the other layers!
 
-`torchvision` contains a "feature extractor" which we can use to grab the activation from a specific layer for most pytorch models, and we can use a small wrapper to handle this for us (this class will eventually be part of plenoptic -- in a release probably later this summer). In the following (large!) block of code, only the `__init__` and `forward` are necessary. However, defining `plot_representation` method in this way allows us to make use of the built-in {func}`plenoptic.plot.synthesis_status` and {func}`plenoptic.plot.synthesis_animate` functions we used in some of the other notebooks!
+:::{warning}
+The contents of this exercise use features from plenoptic that have not yet been released. The names of the object and its methods may change between now and the release in version 2.1.0, later this July.
 
-```{code-cell} ipython3
-class TorchVisionModel(torch.nn.Module):
-    def __init__(self, model, return_node, transform=None):
-        super().__init__()
-        self.transform = transform
-        self.extractor = feature_extraction.create_feature_extractor(
-            model, [return_node]
-        )
-        self.model = model
-        self.return_node = return_node
-
-    def forward(self, x):
-        if self.transform is not None:
-            x = self.transform(x)
-        return self.extractor(x)[self.return_node]
-
-    def plot_representation(
-        self,
-        data: torch.Tensor,
-        ax=None,
-        figsize=(15, 15),
-        ylim=None,
-        batch_idx=0,
-        title=None,
-    ):
-        # Select the batch index
-        data = data[batch_idx]
-
-        # Compute across channels spatal error
-        spatial_error = torch.abs(data).mean(dim=0).detach().cpu().numpy()
-
-        # Compute per-channel error
-        error = torch.abs(data).mean(dim=(1, 2))  # Shape: (C,)
-        sorted_idx = torch.argsort(error, descending=True)
-        sorted_error = error[sorted_idx].detach().cpu().numpy()
-
-        # Determine figure layout
-        if ax is None:
-            fig, axes = plt.subplots(
-                2, 1, figsize=figsize, gridspec_kw={"height_ratios": [1, 1]}
-            )
-        else:
-            ax = po.tools.clean_up_axes(
-                ax, False, ["top", "right", "bottom", "left"], ["x", "y"]
-            )
-            gs = ax.get_subplotspec().subgridspec(2, 1, height_ratios=[3, 1])
-            fig = ax.figure
-            axes = [fig.add_subplot(gs[0]), fig.add_subplot(gs[1])]
-
-        # Plot average error across channels
-        po.plot.imshow(
-            ax=axes[0],
-            image=spatial_error[None, None, ...],
-            title="Average Error Across Channels",
-            vrange="auto0",
-        )
-        # axes[0].set_title()
-
-        # Plot channel error distribution
-        x_pos = np.arange(20)
-        axes[1].bar(x_pos, sorted_error[:20], color="C1", alpha=0.7)
-        axes[1].set_xticks(x_pos)
-        axes[1].set_xticklabels(sorted_idx[:20].tolist(), rotation=45)
-        axes[1].set_xlabel("Channel")
-        axes[1].set_ylabel("Absolute error")
-        axes[1].set_title("Top 20 Channels Contributions to Error")
-
-        if title is not None:
-            fig.suptitle(title)
-
-        return fig, axes
-```
+If you followed the [setup instructions](setup), you will have no problems, but if you install `plenoptic` directly with `pip`, you will get an `AttributeError`.
+:::
 
 ## Use a model from torchvision
 
-Torchvision models are found within `torchvision.models` and are often represented in the following fashion:
+First, let's download the model weights for ResNet50 trained on [ImageNet-1K](https://en.wikipedia.org/wiki/ImageNet#ImageNet-1K) and initialize the `torchvision` model.
 
 ```{code-cell} ipython3
 weights = torchvision.models.ResNet50_Weights.IMAGENET1K_V1
-model = torchvision.models.resnet50(weights=weights)
+deepnet = torchvision.models.resnet50(weights=weights)
 ```
 
-Additionally, many deep net models have an associated preprocessing transform, which depends on the dataset they were trained upon. For ImageNet-trained models, they will generally downsample and crop their images to be 224 x 224, and then normalize the RGB values. My recommendation is to include the normalization within the model (as far as plenoptic is concerned), while the resizing of the image is handled outside. In torchvision, both of these steps are bundled together in the `transforms` class:
+Next, we ensure that our model is in evaluation mode. Many models, including ResNet50, behave differently when in training and evaluation mode. In plenoptic, models are fixed and so we want the evaluation behavior:
+
+```{code-cell} ipython3
+deepnet.eval()
+```
+
+Next, we grab the preprocessing transform from the model. As the [torchvision docs](https://docs.pytorch.org/vision/stable/models.html#using-the-pre-trained-models) explain it (quoting version `0.27`):
+
+> Before using the pre-trained models, one must preprocess the image (resize with right resolution/interpolation, apply inference transforms, rescale the values etc). There is no standard way to do this as it depends on how a given model was trained. It can vary across model families, variants or even weight versions. Using the correct preprocessing method is critical and failing to do so may lead to decreased accuracy or incorrect outputs.
+
+For models trained on ImageNet, this preprocessing consists of two steps: resizing to a height and width of 224 pixels and normalizing the color channels (subtracting means and dividing by standard deviations). Following {cite:alp}`Feather2023-model-metam`, we recommend including the normalization step in the model for metamer synthesis, but handling the image resizing externally. We demonstrate how to do so below.
 
 ```{code-cell} ipython3
 transform = weights.transforms()
-transform
-```
-
-The above transformation will always resize an image to 256 x 256 and then crop out the center 224 x 224 pixels (even if you pass it an image that's 224 x 224!). I have not yet figured out a way to "split up" this transform (separating out the normalization) or otherwise disabling the resizing, so let's manually create a `Normalize` transform with the right means and stds:
-
-```{code-cell} ipython3
+print(transform)
 norm = torchvision.transforms.Normalize(transform.mean, transform.std)
 ```
 
-There's one more step we need: we need to decide which layer's output we wish to examine. Torchvision has a helper function for finding layer names (it returns two lists, one for train mode, one for eval; we want the eval):
+:::{admonition} What happens if the image resizing is included in the plenoptic model?
+:class: dropdown question
+
+If you include the image resizing in the plenoptic model when synthesizing a model metamer, you will clearly see the effect: since the transform crops out the center of the image, the model is completely insensitive to the border, and so it will be unchanged from initialization.
+
+If you're curious, try it out and see! (Just pass `transform` instead of `norm` to `FeatureExtractorModel` model)
+
+:::
+
+Finally, we'll pass our neural network, target layer, and preprocessing transform to plenoptic's [FeatureExtractorModel](https://docs.plenoptic.org/docs/pulls/460/api/generated/plenoptic.models.FeatureExtractorModel.html#plenoptic.models.FeatureExtractorModel), moving it to our specified device:
 
 ```{code-cell} ipython3
-feature_extraction.get_graph_node_names(model)[1]
+model = po.models.FeatureExtractorModel(deepnet, "layer3", norm)
+model.to(DEVICE)
 ```
 
-So let's pick one of those and put it all together:
+## Preparing the image
+
+Now, let's prepare the image. The input image needs to be an RGB image with a height and width of 224 pixels. It should probably also be like those found in ImageNet: a single object in the center of the frame that belongs to one of the [image classes](https://deeplearning.cms.waikato.ac.nz/user-guide/class-maps/IMAGENET/). We'll use one of the famous [monkey selfies](https://en.wikipedia.org/wiki/Monkey_selfie_copyright_dispute), and resize it appropriately:
 
 ```{code-cell} ipython3
-model = TorchVisionModel(model, "layer2", norm)
+img = po.data.macaque().to(DEVICE)
+# here we downsample the original image by a factor of 4 and then lop off the bottom.
+# that way, when we take the central 224 pixels in the following block, we end up with a
+# decent image.
+img = po.process.blur_downsample(img, 2)[..., :-59, :]
+```
+
+As discussed above, models trained on ImageNet should be passed an image of size 224 by 224. We'll use plenoptic's {external+plenoptic:func}`plenoptic.process.center_crop` to do so, grabbing the required size directly from the model's associated `transform`;
+
+```{code-cell} ipython3
+img = po.process.center_crop(img, transform.crop_size[0])
+po.plot.imshow(img, as_rgb=True);
 ```
 
 ## Synthesize model metamers!
 
-Now we can use the above like any other model we've used so far, with one note: these models expect RGB images
+Now we can use the above like any other model we've used so far, though note that we need to tweak some of the optimization hyperparameters. Here, like in the Feather et al. paper, we find better results if we gradually decrease the learning rate over synthesis (using {external+torch:class}`~torch.optim.lr_scheduler.StepLR` to halve the learning rate every 3000 steps). We also use the standard version of {external+torch:class}`~torch.optim.Adam`, rather than the AMSGrad variant (which is the default for plenoptic).
 
 ```{code-cell} ipython3
-img = po.data.einstein(as_gray=False).to(DEVICE)
-model.to(DEVICE)
-po.remove_grad(model)
-model.eval()
 met = po.Metamer(img, model)
+scheduler = torch.optim.lr_scheduler.StepLR
+scheduler_kwargs = {"step_size": 3000, "gamma": 0.5}
+met.setup(
+    optimizer_kwargs={"amsgrad": False},
+    scheduler=scheduler,
+    scheduler_kwargs=scheduler_kwargs
+)
+# by setting stop_iters_to_check=max_iter, we ensure it keeps going through
+# all iterations
+met.synthesize(max_iter=6000, stop_iters_to_check=6000, store_progress=120)
 ```
 
+And look at the output:
+
 ```{code-cell} ipython3
-met.synthesize(max_iter=1500, stop_criterion=1e-11, store_progress=10)
+po.plot.synthesis_status(met, figsize=(15, 4.5));
 ```
 
+In the above plots, we can see the metamer in the leftmost subplot, the loss over synthesis iterations in the middle, and the representation error on the right:
+
+- Our metamer match the results discussed earlier in this notebook: as a layer 3 metamer, it looks like the original image with some RGB noise added.
+- We can see that the optimization performed reasonably well: the loss decreased gradually over synthesis. If you were using these stimuli in an experiment, it may be worth continuing a bit more to get the loss even lower, but these demonstrate the point.
+- The representation error plot has the same structure as the plot_representation plot above. We see that the error is fairly uniform across both space and channels.
+
+As before, we can animate to see this process over time:
+
 ```{code-cell} ipython3
-po.plot.synthesis_status(met, ylim=False);
+po.plot.synthesis_animate(met, figsize=(15, 4.5))
 ```
 
-## Use a model from `timm`
+## Understand the output
 
-`timm` models operate in much the same way as `torchvision`, though with a slightly different syntax for creation of the model and transform:
+The authors of Feather et al., 2023 used two additional checks to verify that metamer synthesis had succeeded (quotes from "Results > Metamer optimization" section, pdf page 5):
+- "the metamer had to result in the same classification decision by the model as the reference stimulus"
+- "measures of the match between the activations for the natural reference stimulus and its model metamer at the matched stage had to be much higher than would be expected by chance, as quantified with a null distribution". The authors used three measures here: Pearson and Spearman correlations and signal-to-noise ratio. We could compute those measures, but without the null distribution, they're difficult to interpret. So we just note that one should do something similar in order to verify synthesis has succeeded.
+
+The following cell shows how to compute the image categories:
 
 ```{code-cell} ipython3
-import timm
-from timm.data import resolve_data_config
-from timm.data.transforms_factory import create_transform
+def get_category(image):
+    image_cat = po.to_numpy(
+        torch.nn.functional.softmax(deepnet(norm(image)), dim=1).squeeze()
+    )
+    return imagenet_categories[image_cat.argmax()]
 
-model = timm.create_model("hf-hub:nateraw/resnet50-oxford-iiit-pet", pretrained=True)
-# Create Transform
-transform = create_transform(**resolve_data_config(model.pretrained_cfg, model=model))
+print(f"Original image category: {get_category(met.image)}")
+print(f"Model metamer category: {get_category(met.metamer)}")
 ```
 
-This model has the same resizing / cropping transform as above, but `timm` represents their transform in a way that allows us to select the steps we want, so we can more straightforwardly just grab the normalization one:
+## Different layer
+
+Look at figure 2e in [Feather et al. 2023](https://mcdermottlab.mit.edu/papers/Feather_etal_2023_deep_metamers.pdf) and pick another layer to target. The hyperparameters we picked should work reasonably well for layers 2 and 4, but others have not been tested. Look at the output of {external+plenoptic:func}`~plenoptic.plot.synthesis_status` and tweak the hyperparameters as necessary to get the loss as low as possible!
+
+:::{admonition} How do I know what layers I can use?
+:class: dropdown question
+
+In this case, you can pick any of the `"layerN"` used in Feather et al., 2023. You can also view possible layer names with {external+torchvision:func}`torchvision.models.feature_extraction.get_graph_node_names`. (For more details on the node naming conventions, please see the {external+torchvision:ref}`About Node Names <about-node-names>` heading in the {external+torchvision:doc}`torchvision documentation <feature_extraction>`.)
+
+```python
+from torchvision.models import feature_extraction
+# this function returns two lists, the first for training mode, the second for eval mode
+feature_extraction.get_graph_node_names(deepnet)[1]
+```
+:::
 
 ```{code-cell} ipython3
+:tags: [skip-execution]
+
+target_layer = # WRITE SOMETHING HERE
+model = po.models.FeatureExtractorModel(deepnet, target_layer, norm)
+model.to(DEVICE)
+
+met = po.Metamer(img, model)
+met.setup(
+    optimizer_kwargs={"amsgrad": False},
+    scheduler=scheduler,
+    scheduler_kwargs=scheduler_kwargs
+)
+# by setting stop_iters_to_check=max_iter, we ensure it keeps going through
+# all iterations
+met.synthesize(max_iter=6000, stop_iters_to_check=6000, store_progress=120)
+po.plot.synthesis_status(met, figsize=(15, 4.5));
+```
+
+You can also specify multiple layers (as a list of strings, e.g., `["layer2", "layer3"]`) to match multiple layers at once!
+
+## Different target image
+
+Try using a different target image than the one of macaque above and running metamer synthesis until completion:
+
+:::{admonition} Loading other images
+:class: hint
+
+Try one of the other {external+plenoptic:ref}`included images <images-api>` or use {external+plenoptic:func}`plenoptic.load_images` to load one from disk.
+
+:::
+
+```{code-cell} ipython3
+:tags: [skip-execution]
+
+img = # WRITE SOMETHING NEW HERE
+img = img.to(DEVICE)
+met = po.Metamer(img, model)
+met.setup(
+    optimizer_kwargs={"amsgrad": False},
+    scheduler=scheduler,
+    scheduler_kwargs=scheduler_kwargs
+)
+# by setting stop_iters_to_check=max_iter, we ensure it keeps going through
+# all iterations
+met.synthesize(max_iter=6000, stop_iters_to_check=6000, store_progress=120)
+po.plot.synthesis_status(met, figsize=(15, 4.5));
+```
+
+And maybe animate to see what synthesis looks like?
+
+```{code-cell} ipython3
+:tags: [skip-execution]
+
+po.plot.synthesis_animate(met, figsize=(15, 4.5))
+```
+
+## Different initial image
+
+While the original paper initialized from a patch of white noise, it can be interesting to start from a different image as well. Using one of the same tools as above for loading another image, initialize metamer synthesis from another starting point and run it to completion:
+
+```{code-cell} ipython3
+:tags: [skip-execution]
+
+met = po.Metamer(img, model)
+met.setup(
+    initial_image=, # WRITE SOMETHING HERE
+    optimizer_kwargs={"amsgrad": False},
+    scheduler=scheduler,
+    scheduler_kwargs=scheduler_kwargs
+)
+met.synthesize(max_iter=6000, stop_iters_to_check=6000, store_progress=120)
+po.plot.synthesis_status(met, figsize=(15, 4.5));
+```
+
+And maybe animate to see what synthesis looks like?
+
+```{code-cell} ipython3
+:tags: [skip-execution]
+
+po.plot.synthesis_animate(met, figsize=(15, 4.5))
+```
+
+## Different DeepNet
+
+This setup works for any torchvision model! Pick another [model with pre-trained weights](https://docs.pytorch.org/vision/main/models.html#classification) and a layer to target, and synthesize some model metamers!
+
+```{code-cell} ipython3
+:tags: [skip-execution]
+
+weights = torchvision.models. # WRITE SOMETHING HERE!
+deepnet = torchvision.models. # WRITE SOMETHING HERE!
+deepnet.eval()
+```
+
+Don't forget to grab their transform! How exactly this looks will depend on the model, but remember that we recommend any image-resizing transforms be handled *externally* and everything else be part of the metamer model.
+
+```{code-cell} ipython3
+:tags: [skip-execution]
+
+# This should work for any ImageNet-trained model, but you'll have to do something else
+# for other models
+transform = weights.transforms()
 print(transform)
-transform = transform.transforms[-1]
-transform
+norm = torchvision.transforms.Normalize(transform.mean, transform.std)
 ```
 
-And similarly, we have to choose a specific layer. We can see their names with the same helper function as above. But let's just grab the same layer:
+Now, specify the intermediate layer you want to match and initialize the plenoptic model!
 
 ```{code-cell} ipython3
-model = TorchVisionModel(model, "layer2", norm)
+:tags: [skip-execution]
+
+target_layer = # WRITE SOMETHING HERE
+model = po.models.FeatureExtractorModel(deepnet, target_layer, norm)
+model.to(DEVICE)
+```
+
+And finally, instantiate the metamer and run synthesis. Note that the arguments to {external+plenoptic:func}`~plenoptic.Metamer.setup` will almost certainly need to be changed, but we've repeated the ones used for ResNet50 as a starting point. You may also need to change the loss function, see [](textures) for an example of changing this, and {external+plenoptic:class}`~plenoptic.Metamer` documentation for more details.
+
+```{code-cell} ipython3
+:tags: [skip-execution]
+
+met = po.Metamer(img, model)
+scheduler = torch.optim.lr_scheduler.StepLR
+scheduler_kwargs = {"step_size": 3000, "gamma": 0.5}
+met.setup(
+    optimizer_kwargs={"amsgrad": False},
+    scheduler=scheduler,
+    scheduler_kwargs=scheduler_kwargs
+)
+met.synthesize(max_iter=6000, stop_iters_to_check=6000, store_progress=120)
+po.plot.synthesis_status(met, figsize=(15, 4.5));
 ```

@@ -6,7 +6,7 @@ The introductory presentation can be found [here](https://presentations.plenopti
 
 You are encouraged to follow the [setup](setup) instructions found on this page, in order to install everything on your laptop and create local copies of the notebooks in the `notebooks/` folder. You can then walk through the [tutorial notebook](full-intro); I recommend opening up `notebooks/introduction-users.ipynb` on your laptop and typing the code into the cells as you read through that notebook, to practice using plenoptic's syntax (you will also have a local copy of the notebook with all the code and text explaining what's happening in `notebooks/introduction.ipynb` if you're impatient). After going through the tutorial notebook, I recommend trying to work through the exercises, which are linked in the sidebar and are the other `ipynb` files in the `notebooks/` directory.
 
-You may also find the [glossary](glossary.md) useful.
+You may also find the [](glossary) useful.
 
 (setup)=
 ## Setup

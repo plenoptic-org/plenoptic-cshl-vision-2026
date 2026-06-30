@@ -11,6 +11,7 @@ kernelspec:
   name: plenoptic_venv
 ---
 
+(simple-metamer)=
 # Minimal metamer synthesis example
 
 See {external+plenoptic:doc}`plenoptic User Guide <user_guide/index>` for more details.
@@ -120,4 +121,4 @@ po.plot.synthesis_animate(met)
 
 Try any of the above with a different model! Try one of the other {external+plenoptic:ref}`LGN-inspired models <models-api>`.
 
-If you want a more complex model, see the [texture](./textures.md) or [torchvision](./torchvision.md) notebooks.
+If you want a more complex model, see the [](textures) or [](torchvision) exercises.

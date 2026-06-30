@@ -11,9 +11,14 @@ kernelspec:
   name: plenoptic_venv
 ---
 
+(textures)=
 # Texture synthesis
 
 See {external+plenoptic:doc}`user_guide/models_and_metrics/portilla_simoncelli/ps_index` for more details.
+
+:::{attention}
+It is recommended that you first work through the [](simple-metamer) exercise before this one! The optimization procedure here is a bit more complex.
+:::
 
 ```{code-cell} ipython3
 # needed for the plotting/animating:

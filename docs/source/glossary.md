@@ -1,6 +1,7 @@
+(glossary)=
 # Glossary
 
-The attached notebook uses some jargon that might be new to you. Hopefully this glossary will help clarify things, but please ask if something is unclear!
+The attached notebooks use some jargon that might be new to you. Hopefully this glossary will help clarify things, but please ask if something is unclear!
 
 - Bandpass: a filter or model that is most sensitive to frequencies in the middle range and is less sensitive or insensitive to high and low frequencies. Much of the early visual system, including retinal ganglion cells, lateral geniculate nucleus neurons, and primary visual cortical neurons, display bandpass selectivity. Example functional forms include difference-of-Gaussians, Gabor filters, Morlet wavelets, and the steerable pyramid filters. Compare to highpass and lowpass.
 - Eigendistortions: image distortions that produce the most and least noticeable change in model response. They are the eigenvectors of the model's Fisher information matrix, which provides a quadratic approximation of the discriminability of distortions on a given image. In the cases we consider, all models have a deterministic and differentiable mapping from images to representations, and thus the Fisher information matrix is equal to $J^T J$, where $J$ is the model's Jacobian matrix with respect to the target image.

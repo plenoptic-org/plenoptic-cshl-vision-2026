@@ -31,6 +31,7 @@ requests.get(f"{plen_docs_url}/objects.inv")
 intersphinx_mapping = {
     "plenoptic": (plen_docs_url, None),
     "torch": ("https://docs.pytorch.org/docs/stable/", None),
+    "torchvision": ("https://docs.pytorch.org/vision/stable/", None),
 }
 
 templates_path = ["_templates"]
