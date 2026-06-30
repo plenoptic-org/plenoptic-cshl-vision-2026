@@ -29,6 +29,7 @@ docs = [
     "sphinx-copybutton",
     "sphinx-togglebutton",
     "sphinx-design",
+    "ipywidgets",
 ]
 
 dev = [
