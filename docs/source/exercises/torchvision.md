@@ -134,7 +134,7 @@ In the above plots, we can see the metamer in the leftmost subplot, the loss ove
 
 - Our metamer match the results discussed earlier in this notebook: as a layer 3 metamer, it looks like the original image with some RGB noise added.
 - We can see that the optimization performed reasonably well: the loss decreased gradually over synthesis. If you were using these stimuli in an experiment, it may be worth continuing a bit more to get the loss even lower, but these demonstrate the point.
-- The representation error plot has the same structure as the plot_representation plot above. We see that the error is fairly uniform across both space and channels.
+- The representation error plot has two subplots. The first plots the average across channel, the average spatial representation, while the second averages across space to get a per-channel average representation. We can see that, while there's some variation across both channels and space, there's not an obvious outlier whose error we have been unable to constrain.
 
 As before, we can animate to see this process over time:
 
