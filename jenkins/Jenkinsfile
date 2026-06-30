@@ -19,7 +19,7 @@ catchError {
           sh '''#!/bin/bash -ex
                 # make sure we have the git tags, since we need them to correctly version output
                 git fetch --tags
-                uv sync --extra docs
+                uv sync --group docs
 
                 JENKINS=true uv run make -C docs html O="-T"
 
