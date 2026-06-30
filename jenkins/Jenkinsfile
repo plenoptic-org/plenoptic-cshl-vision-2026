@@ -19,10 +19,10 @@ catchError {
           sh '''#!/bin/bash -ex
                 # make sure we have the git tags, since we need them to correctly version output
                 git fetch --tags
-                uv sync
+                uv sync --extra docs
 
                 JENKINS=true uv run make -C docs html O="-T"
-                
+
                 # we move this to a separate directory to reduce the risk of the checkout
                 # below clobbering it
                 mv docs/build/html \$HOME/built-workshops
