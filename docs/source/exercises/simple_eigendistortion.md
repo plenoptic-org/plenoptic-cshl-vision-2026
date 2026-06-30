@@ -24,6 +24,8 @@ plt.rcParams['animation.html'] = 'html5'
 # use single-threaded ffmpeg for animation writer
 plt.rcParams['animation.writer'] = 'ffmpeg'
 plt.rcParams['animation.ffmpeg_args'] = ['-threads', '1']
+# so that relative sizes of axes created by po.plot.imshow and others look right
+plt.rcParams["figure.dpi"] = 72
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 ```
 
