@@ -27,7 +27,7 @@ catchError {
                 # below clobbering it
                 mv docs/build/html \$HOME/built-workshops
              '''
-          lock('plenoptic_workshop_publish' /* was: "plenoptic_workshops-publish", doesn't exist */) {
+          lock(label: 'plenoptic_workshop_publish' /* was: "plenoptic_workshops-publish", doesn't exist */) {
             def scm = scmGit(branches: [[name: 'refs/heads/main']], userRemoteConfigs: [[credentialsId: 'github-jenkins', url: 'https://github.com/plenoptic-org/plenoptic-workshops.git']])
             dir(path: 'workshops') {
               checkout(changelog: false, poll: false, scm: scm)
