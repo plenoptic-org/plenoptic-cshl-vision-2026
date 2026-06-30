@@ -56,7 +56,7 @@ deepnet = torchvision.models.resnet50(weights=weights)
 Next, we ensure that our model is in evaluation mode. Many models, including ResNet50, behave differently when in training and evaluation mode. In plenoptic, models are fixed and so we want the evaluation behavior:
 
 ```{code-cell} ipython3
-deepnet.eval()
+deepnet.eval();
 ```
 
 Next, we grab the preprocessing transform from the model. As the [torchvision docs](https://docs.pytorch.org/vision/stable/models.html#using-the-pre-trained-models) explain it (quoting version `0.27`):

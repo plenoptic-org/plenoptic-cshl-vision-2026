@@ -490,7 +490,7 @@ Now let's visualize our outputs (the code to create this plot is slightly annoyi
 </div>
 
 ```{code-cell} ipython3
-plot_helper(cs_metamer, init_img)
+plot_helper(cs_metamer, init_img);
 ```
 
 The layout of the plots here is the same as before: the top row shows our target image and its model representation, while the next rows each show a separate model metamer in the middle column, with their different initial points in the left column and their model representations on the right. We can see that the model representation in each row looks the same, while the middle columns look very different.
@@ -589,7 +589,7 @@ And let's visualize our results:
 </div>
 
 ```{code-cell} ipython3
-plot_helper(lg_metamer, init_img)
+plot_helper(lg_metamer, init_img);
 ```
 
 We can see that the `LuminanceGainControl` model metamers look somewhat similar to that of the `CenterSurround` model, but taking the insensitivity to pixel values to an extreme --- because of the division by the local luminance, the model is completely invariant to it, so that the mean pixel values match those of the initializing image, fairly dramatically.
