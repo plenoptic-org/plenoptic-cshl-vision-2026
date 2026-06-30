@@ -10,8 +10,8 @@ catchError {
         withEnv([
           "HOME=$WORKSPACE",
           "OMP_NUM_THREADS=4",
-          "PROJECT_NAME=VSS-2025",
-          "GITHUB_PATH=plenoptic-org/plenoptic-vss-2025",
+          "PROJECT_NAME=CSHL-vision-course-2026",
+          "GITHUB_PATH=plenoptic-org/plenoptic-cshl-vision-2026",
           "BRANCH_NAME=${env.BRANCH_NAME}",
           "ISSUE_NUM=${env.BRANCH_NAME.replace('PR-', '')}"
         ]) {
@@ -50,7 +50,7 @@ catchError {
                 GIT_COMMITTER_EMAIL="jenkins@flatironinstitute.org" GIT_COMMITTER_NAME="Flatiron Jenkins" git commit --author='Flatiron Jenkins <jenkins@flatironinstitute.org>' --allow-empty -m "Generated documentation for \$DOCS_DIR" -m '${env.BUILD_TAG}'
               """
               gitPush(gitScm: scm, targetBranch: 'main', targetRepo: 'origin')
-              withCredentials([string(credentialsId: 'billbrod-github-pr-write' /* was: plenoptic-vss, doesn't exist */, variable: 'GITHUB_TOKEN')]) {
+              withCredentials([string(credentialsId: 'billbrod-github-pr-write', variable: 'GITHUB_TOKEN')]) {
                 // this being single quotes is VERY IMPORTANT. otherwise the
                 // GITHUB_TOKEN value would be exposed, see
                 // https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#interpolation-of-sensitive-environment-variables
