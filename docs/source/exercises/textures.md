@@ -11,7 +11,6 @@ kernelspec:
   name: plenoptic_venv
 ---
 
-(textures)=
 # Texture synthesis
 
 See {external+plenoptic:doc}`user_guide/models_and_metrics/portilla_simoncelli/ps_index` for more details.
@@ -33,7 +32,7 @@ plt.rcParams["animation.ffmpeg_args"] = ["-threads", "1"]
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 ```
 
-The texture model requires a little more configuring to find reliably good metamers. In the [original paper](https://www.cns.nyu.edu/pub/eero/portilla99-reprint.pdf), the authors use coarse-to-fine synthesis, which starts with coarsest scales (i.e., lowest spatial frequencies) of the model representation and moves to finer and finer scales. In plenoptic, we have found that this is unnecessary for finding good metamers (though it is possible, using {external+plenoptic:class}`plenoptic.MetamerCTF`), as long as one uses the {external+torchvision:class}`torch.optim.LBFGS` optimizer and a custom loss function, {external+plenoptic:func}`plenoptic.loss.portilla_simoncelli_loss_factory`. (See [this issue](https://github.com/plenoptic-org/plenoptic/issues/365) if you are interested in how we came to this suggestion.)
+The texture model requires a little more configuring to find reliably good metamers. In the [original paper](https://www.cns.nyu.edu/pub/eero/portilla99-reprint.pdf), the authors use coarse-to-fine synthesis, which starts with coarsest scales (i.e., lowest spatial frequencies) of the model representation and moves to finer and finer scales. In plenoptic, we have found that this is unnecessary for finding good metamers (though it is possible, using {external+plenoptic:class}`plenoptic.MetamerCTF`), as long as one uses the {external+torch:class}`torch.optim.LBFGS` optimizer and a custom loss function, {external+plenoptic:func}`plenoptic.loss.portilla_simoncelli_loss_factory`. (See [this issue](https://github.com/plenoptic-org/plenoptic/issues/365) if you are interested in how we came to this suggestion.)
 
 The following block synthesizes a texture metamer using our suggested setup:
 

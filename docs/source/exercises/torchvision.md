@@ -11,8 +11,7 @@ kernelspec:
   name: plenoptic_venv
 ---
 
-(torchvision)=
-# Synthesizing Deep Net Model Metameres
+# Synthesizing Deep Net Model Metamers
 
 plenoptic is compatible with any model written in pytorch, including deep neural networks from the model zoos [timm](https://huggingface.co/timm) and [torchvision](https://docs.pytorch.org/vision/main/models.html). In this exercise, we'll grab ResNet50 from torchvision and show how to generate metamers for several of its intermediate representations, as done in [Feather et al. 2023](https://mcdermottlab.mit.edu/papers/Feather_etal_2023_deep_metamers.pdf).
 
@@ -62,7 +61,7 @@ Next, we grab the preprocessing transform from the model. As the [torchvision do
 
 > Before using the pre-trained models, one must preprocess the image (resize with right resolution/interpolation, apply inference transforms, rescale the values etc). There is no standard way to do this as it depends on how a given model was trained. It can vary across model families, variants or even weight versions. Using the correct preprocessing method is critical and failing to do so may lead to decreased accuracy or incorrect outputs.
 
-For models trained on ImageNet, this preprocessing consists of two steps: resizing to a height and width of 224 pixels and normalizing the color channels (subtracting means and dividing by standard deviations). Following {cite:alp}`Feather2023-model-metam`, we recommend including the normalization step in the model for metamer synthesis, but handling the image resizing externally. We demonstrate how to do so below.
+For models trained on ImageNet, this preprocessing consists of two steps: resizing to a height and width of 224 pixels and normalizing the color channels (subtracting means and dividing by standard deviations). Following Feather et al. 2023 we recommend including the normalization step in the model for metamer synthesis, but handling the image resizing externally. We demonstrate how to do so below.
 
 ```{code-cell} ipython3
 transform = weights.transforms()
@@ -293,7 +292,7 @@ model = po.models.FeatureExtractorModel(deepnet, target_layer, norm)
 model.to(DEVICE)
 ```
 
-And finally, instantiate the metamer and run synthesis. Note that the arguments to {external+plenoptic:func}`~plenoptic.Metamer.setup` will almost certainly need to be changed, but we've repeated the ones used for ResNet50 as a starting point. You may also need to change the loss function, see [](textures) for an example of changing this, and {external+plenoptic:class}`~plenoptic.Metamer` documentation for more details.
+And finally, instantiate the metamer and run synthesis. Note that the arguments to {external+plenoptic:meth}`~plenoptic.Metamer.setup` will almost certainly need to be changed, but we've repeated the ones used for ResNet50 as a starting point. You may also need to change the loss function, see [](textures) for an example of changing this, and {external+plenoptic:class}`~plenoptic.Metamer` documentation for more details.
 
 ```{code-cell} ipython3
 :tags: [skip-execution]

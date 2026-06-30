@@ -1,4 +1,3 @@
-(glossary)=
 # Glossary
 
 The attached notebooks use some jargon that might be new to you. Hopefully this glossary will help clarify things, but please ask if something is unclear!
